@@ -15,12 +15,20 @@ func MigrateDB(db *gorm.DB) error {
 		return err
 	}
 
+	if err := db.Migrator().DropTable(&models.Item{}); err != nil {
+		return err
+	}
+
 	if err := db.AutoMigrate(&models.User{}); err != nil {
 		return err
 	}
 
+	if err := db.AutoMigrate(&models.Item{}); err != nil {
+		return err
+	}
+
 	users := []models.User{
-		{Name: "Hrishikesh Pradhan", Email: "hspsat@gmail.com"},
+		{Name: "Hrishikesh", Email: "hspsat@gmail.com"},
 		{Name: "Jane Smith", Email: "jane@example.com"},
 		{Name: "Bob Johnson", Email: "bob@example.com"},
 	}
@@ -30,6 +38,18 @@ func MigrateDB(db *gorm.DB) error {
 		return result.Error
 	}
 
-	log.Printf("Migrations complete. Created %d users.", len(users))
+	log.Printf("User migrations complete. Created %d users.", len(users))
+
+	items := []models.Item{
+		{Name: "Apple", Price: 10},
+		{Name: "Mango", Price: 20},
+		{Name: "Banana", Price: 5},
+	}
+
+	result = db.Create(&items)
+	if result.Error != nil {
+		return result.Error
+	}
+	log.Printf("Item migrations complete. Created %d items.", len(items))
 	return nil
 }
