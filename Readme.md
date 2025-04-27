@@ -1,0 +1,1 @@
+## Go backend server for receipts pdf generation and email sending.
